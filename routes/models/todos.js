@@ -1,15 +1,34 @@
 const express = require('express')
 const router = express.Router()
 const db =require('../../models')
+const todo = require('../../models/todo')
 const Todo = db.Todo
 
 router.get('/new', (req, res) => {
     res.render('new')
 })
+
 router.post('/', (req, res) => {
     const UserId = req.user.id
     const name = req.body.name
-    Todo.create({name, UserId})
+    return Todo.create({name, UserId})
+        .then(() => res.redirect('/'))
+        .catch(err => console.log(err))
+})
+
+router.get('/:id/edit', (req, res) => {
+    const id = req.params.id
+    return Todo.findOne({ where : {id: id}})
+        .then(todo => {
+            res.render('edit', {todo: todo.toJSON()})
+        })
+})
+
+router.put('/:id', (req, res) => {
+    const id = req.params.id
+    const{ name } = req.body
+    return Todo.findOne({where: {id: id}})
+        .then(todo => todo.update({name: name}))
         .then(() => res.redirect('/'))
         .catch(err => console.log(err))
 })
