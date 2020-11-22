@@ -26,9 +26,9 @@ router.get('/:id/edit', (req, res) => {
 
 router.put('/:id', (req, res) => {
     const id = req.params.id
-    const{ name } = req.body
+    const{ name, isDone} = req.body
     return Todo.findOne({where: {id: id}})
-        .then(todo => todo.update({name: name}))
+        .then(todo => todo.update({name: name, isDone: isDone === 'on'}))
         .then(() => res.redirect('/'))
         .catch(err => console.log(err))
 })
