@@ -17,10 +17,14 @@ app.use(methodOverride('_method'))
 app.use(session({
     secret: 'ThisIsMySecret',
     resave: false,
-    saveUninitialzed: true
+    saveUninitialized: true
 }))
 usePassport(app)
-
+app.use((req, res, next) => {
+    res.locals.user = req.user
+    res.locals.isAuthenticated = req.isAuthenticated()
+    next()
+}) 
 app.use(router)
 
 
