@@ -33,6 +33,13 @@ router.put('/:id', (req, res) => {
         .catch(err => console.log(err))
 })
 
+router.delete('/:id', (req, res) => {
+    const id =req.params.id
+    return Todo.findOne({where: {id: id}})
+        .then(todo => todo.destroy())
+        .then(() => res.redirect('/'))
+})
+
 router.get('/:id', (req, res) => {
     const id = req.params.id
     return Todo.findByPk(id)
